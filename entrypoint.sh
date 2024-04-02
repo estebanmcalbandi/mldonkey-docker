@@ -4,7 +4,7 @@ if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
     mldonkey &
     echo "Waiting for mldonkey to start..."
     sleep 5
-    /usr/lib/mldonkey/mldonkey_command -p "" "set client_name https://hub.docker.com/r/wibol/mldonkey-ubuntu" "save"
+    /usr/lib/mldonkey/mldonkey_command -p "" "set client_name Iiiiiiiiiiiiiiiiiiiiii" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set client_buffer_size 5000000" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set run_as_user mldonkey" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set allowed_ips 0.0.0.0/0" "save"
@@ -24,8 +24,8 @@ if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
     /usr/lib/mldonkey/mldonkey_command -p "" "set ED2K-upload_timeout 60." "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set max_concurrent_downloads 150" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set filenames_utf8 true" "save"
-    /usr/lib/mldonkey/mldonkey_command -p "" "set create_file_mode 664" "save"
-    /usr/lib/mldonkey/mldonkey_command -p "" "set create_dir_mode 775" "save"
+    /usr/lib/mldonkey/mldonkey_command -p "" "set create_file_mode 644" "save"
+    /usr/lib/mldonkey/mldonkey_command -p "" "set create_dir_mode 755" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set create_file_sparse true" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "urlremove http://www.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "urlremove http://www.gruk.org/server.met.gz" "save"
@@ -47,6 +47,8 @@ if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
     sed -i 's/  port =/   port =/' /var/lib/mldonkey/donkey.ini
 fi
 
+usermod --uid 1000 mldonkey
+usermod --gid 100 mldonkey
 chown -R mldonkey:mldonkey /var/lib/mldonkey
 
 mldonkey
