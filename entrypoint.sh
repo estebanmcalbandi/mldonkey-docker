@@ -1,11 +1,11 @@
 #!/bin/sh
 
-# Cuando arranca el servidor lo hace sin contraseñ, con el usuario admin.
+# Cuando arranca el servidor lo hace sin contraseña, con el usuario admin.
 if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
     mldonkey &
 
     echo 'Waiting for mldonkey to start...'
-    sleep 10
+    sleep 3
 
     /usr/lib/mldonkey/mldonkey_command -p "" "set client_name Iiiiiiiiiiiiiiiiiiiiii" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set client_buffer_size 5000000" "save"
@@ -38,12 +38,12 @@ if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
     /usr/lib/mldonkey/mldonkey_command -p "" "urladd kad http://upd.emule-security.org/nodes.dat 0" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "urladd guarding.p2p http://upd.emule-security.org/ipfilter.zip 250" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "urladd geoip.dat http://upd.emule-security.org/ip-to-country.csv.zip 0" "save"
-    
+
     if [ -z "$MLDONKEY_ADMIN_PASSWORD" ]; then
         /usr/lib/mldonkey/mldonkey_command -p "" "kill"
     else
-        /usr/lib/mldonkey/mldonkey_command -p "" "passwd $MLDONKEY_ADMIN_PASSWORD" 
-	/usr/lib/mldonkey/mldonkey_command -u "admin" -p "$MLDONKEY_ADMIN_PASSWORD" "kill"
+        /usr/lib/mldonkey/mldonkey_command -p "" "passwd ${MLDONKEY_ADMIN_PASSWORD}"
+        /usr/lib/mldonkey/mldonkey_command -p "${MLDONKEY_ADMIN_PASSWORD}" "kill"
     fi
 
     # First port 6209 is for overnet, second 16965 for kad, we leave all the same
@@ -52,8 +52,8 @@ if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
     sed -i 's/  port =/   port =/' /var/lib/mldonkey/donkey.ini
 fi
 
-# Reinicio los permisos en /var/lib/mldonkey
-chown -R mldonkey:100 /var/lib/mldonkey
+# Reinicio los permisos en /var/lib/
+chown -R ${MLDONKEY_UID}:${MLDONKEY_GID} ${MLDONKEY_DIR}/[!it]*
 
-# Lanzo el servicio
+# Lanzo finalmente el servicio
 mldonkey
