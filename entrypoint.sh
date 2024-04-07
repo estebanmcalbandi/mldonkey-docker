@@ -1,9 +1,12 @@
 #!/bin/sh
 
+# Cuando arranca el servidor lo hace sin contraseñ, con el usuario admin.
 if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
     mldonkey &
-    echo "Waiting for mldonkey to start..."
-    sleep 5
+
+    echo 'Waiting for mldonkey to start...'
+    sleep 10
+
     /usr/lib/mldonkey/mldonkey_command -p "" "set client_name Iiiiiiiiiiiiiiiiiiiiii" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set client_buffer_size 5000000" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set run_as_user mldonkey" "save"
@@ -13,7 +16,7 @@ if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
     /usr/lib/mldonkey/mldonkey_command -p "" "set enable_overnet false" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set enable_directconnect false" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set enable_fileTP false" "save"
-    /usr/lib/mldonkey/mldonkey_command -p "" "set max_hard_upload_rate 0" "save"
+    /usr/lib/mldonkey/mldonkey_command -p "" "set max_hard_upload_rate 1000" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set max_hard_download_rate 0" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set max_upload_slots 10" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set ED2K-connect_only_preferred_server false" "save"
@@ -35,21 +38,22 @@ if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
     /usr/lib/mldonkey/mldonkey_command -p "" "urladd kad http://upd.emule-security.org/nodes.dat 0" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "urladd guarding.p2p http://upd.emule-security.org/ipfilter.zip 250" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "urladd geoip.dat http://upd.emule-security.org/ip-to-country.csv.zip 0" "save"
+    
     if [ -z "$MLDONKEY_ADMIN_PASSWORD" ]; then
         /usr/lib/mldonkey/mldonkey_command -p "" "kill"
     else
-        /usr/lib/mldonkey/mldonkey_command -p "" "useradd admin $MLDONKEY_ADMIN_PASSWORD"
-        /usr/lib/mldonkey/mldonkey_command -u admin -p "$MLDONKEY_ADMIN_PASSWORD" "kill"
+        /usr/lib/mldonkey/mldonkey_command -p "" "passwd $MLDONKEY_ADMIN_PASSWORD" 
+	/usr/lib/mldonkey/mldonkey_command -u "admin" -p "$MLDONKEY_ADMIN_PASSWORD" "kill"
     fi
+
     # First port 6209 is for overnet, second 16965 for kad, we leave all the same
     sed -i '0,/   port =/s/   port =.*/  port = 6209/' /var/lib/mldonkey/donkey.ini
     sed -i '0,/   port =/s/   port =.*/  port = 16965/' /var/lib/mldonkey/donkey.ini
     sed -i 's/  port =/   port =/' /var/lib/mldonkey/donkey.ini
 fi
 
-usermod --uid 1000 mldonkey
-usermod --gid 100 mldonkey
-chown -R mldonkey:mldonkey /var/lib/mldonkey
+# Reinicio los permisos en /var/lib/mldonkey
+chown -R mldonkey:100 /var/lib/mldonkey
 
+# Lanzo el servicio
 mldonkey
-
