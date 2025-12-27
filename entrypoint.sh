@@ -1,13 +1,13 @@
 #!/bin/sh
 
-# Cuando arranca el servidor lo hace sin contraseña, con el usuario admin.
+# Si no existe el fichero de configuración, es la primera vez que se lanza
 if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
     mldonkey &
 
     echo 'Waiting for mldonkey to start...'
     sleep 3
 
-    /usr/lib/mldonkey/mldonkey_command -p "" "set client_name Iiiiiiiiiiiiiiiiiiiiii" "save"
+    /usr/lib/mldonkey/mldonkey_command -p "" "set client_name Iiiiiiiiiiiiiiiiiiiiii'm" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set client_buffer_size 5000000" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set run_as_user mldonkey" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "set allowed_ips 0.0.0.0/0" "save"
@@ -39,6 +39,7 @@ if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
     /usr/lib/mldonkey/mldonkey_command -p "" "urladd guarding.p2p http://upd.emule-security.org/ipfilter.zip 250" "save"
     /usr/lib/mldonkey/mldonkey_command -p "" "urladd geoip.dat http://upd.emule-security.org/ip-to-country.csv.zip 0" "save"
 
+    # Cambiamos la contraseña si la hay y apagamos el servicio
     if [ -z "$MLDONKEY_ADMIN_PASSWORD" ]; then
         /usr/lib/mldonkey/mldonkey_command -p "" "kill"
     else
@@ -53,7 +54,7 @@ if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
 fi
 
 # Reinicio los permisos en /var/lib/
-chown -R ${MLDONKEY_UID}:${MLDONKEY_GID} ${MLDONKEY_DIR}/[!it]*
+chown -R mldonkey:mldonkey /var/lib/mldonkey
 
 # Lanzo finalmente el servicio
 mldonkey
