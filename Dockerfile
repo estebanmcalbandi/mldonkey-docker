@@ -33,6 +33,7 @@ ENV MLDONKEY_DIR=/var/lib/mldonkey
 
 # Defino las carpetas temp e incoming como volúmenes
 VOLUME /var/lib/mldonkey
+VOLUME /descargas
 
 # Exponemos todos los puertos necesarios
 EXPOSE 4080
