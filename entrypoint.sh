@@ -44,11 +44,11 @@ if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
     mldonkey_command -p "" "set max_concurrent_downloads 150" "save"
     
     # Descargas y sus permisos
-    mldonkey_command -p "" "set core.download_dir /descargas" "save"
     mldonkey_command -p "" "set filenames_utf8 true" "save"
     mldonkey_command -p "" "set create_file_mode 644" "save"
     mldonkey_command -p "" "set create_dir_mode 755" "save"
     mldonkey_command -p "" "set create_file_sparse true" "save"
+
 
     # Algunas listas que hay que actualizar
     mldonkey_command -p "" "urlremove http://www.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz" "save"
