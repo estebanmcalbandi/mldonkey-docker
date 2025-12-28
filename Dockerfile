@@ -5,7 +5,7 @@ RUN apt -y update
 RUN echo yes | apt install --no-install-recommends -y mldonkey-server
 ENV PATH="${PATH}:/usr/lib/mldonkey"
 
-#RUN rm -rf /var/lib/apt/lists/* 
+RUN rm -rf /var/lib/apt/lists/* 
 RUN rm -rf /var/log/mldonkey 
 RUN rm -rf /var/lib/mldonkey/*
 
