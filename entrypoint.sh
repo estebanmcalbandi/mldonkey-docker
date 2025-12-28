@@ -73,4 +73,5 @@ if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
 fi
 
 # Lanzo finalmente el servicio
-su - mldonkey -c "MLDONKEY_DIR=\"$MLDONKEY_DIR\" mldonkey"
+su - mldonkey -c "MLDONKEY_DIR=\"$MLDONKEY_DIR\" mldonkey" &
+wait $!
