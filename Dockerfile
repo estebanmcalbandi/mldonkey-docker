@@ -15,25 +15,16 @@ ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8 
 
 # Asignamos el UID y el GID para el usuario mldonkey
+ENV MLDONKEY_USER='user'
 ENV MLDONKEY_UID='3000'
-RUN usermod -u ${MLDONKEY_UID} mldonkey
-
 ENV MLDONKEY_GID='568'
-RUN groupmod -g ${MLDONKEY_GID} mldonkey
-
-# Asignamos los permisos adecuados a la carpeta /var/lib/mldonkey
-RUN chown mldonkey:mldonkey /var/lib/mldonkey
-
-# Asignamos un shell al usuario mldonkey
-RUN chsh -s /bin/bash mldonkey
-
-# Asignamos la carpeta (también el home del usuario mldonkey) donde se almacenarán las configuraciones y descargas
-# Si no está asignada esta variable, se crea una carpeta .mldonkey oculta en el directorio del usuario que ejecuta
-ENV MLDONKEY_DIR=/var/lib/mldonkey
+RUN useradd  --home-dir $MLDONKEY_DIR --uid ${MLDONKEY_UID} --gid ${MLDONKEY_GID} --shell /bin/bash ${MLDONKEY_USER}
+RUN chown $MLDONKEY_UID:$MLDONKEY_GID /var/lib/mldonkey
 
 # Defino las carpetas temp e incoming como volúmenes
 VOLUME /var/lib/mldonkey
 VOLUME /var/lib/mldonkey/incoming
+VOLUME /var/lib/mldonkey/temp
 
 # Exponemos todos los puertos necesarios
 EXPOSE 4080

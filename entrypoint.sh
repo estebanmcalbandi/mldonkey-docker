@@ -3,7 +3,7 @@
 # Si no existe el fichero de configuración, es la primera vez que se lanza
 # Creamos una configuración personalizada
 if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
-    su - mldonkey -c "MLDONKEY_DIR=\"$MLDONKEY_DIR\" mldonkey" &
+    su - $MLDONKEY_USER -c "MLDONKEY_DIR=\"$MLDONKEY_DIR\" mldonkey" &
 
     echo 'Waiting for mldonkey to start...'
     sleep 3
@@ -73,5 +73,5 @@ if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
 fi
 
 # Lanzo finalmente el servicio
-su - mldonkey -c "MLDONKEY_DIR=\"$MLDONKEY_DIR\" mldonkey" &
+su - $MLDONKEY_USER -c "MLDONKEY_DIR=\"$MLDONKEY_DIR\" mldonkey" &
 wait $!
