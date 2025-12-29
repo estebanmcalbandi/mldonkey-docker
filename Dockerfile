@@ -16,10 +16,7 @@ ENV LC_ALL=C.UTF-8
 
 # Asignamos el UID y el GID para el usuario mldonkey
 ENV MLDONKEY_UID='3000'
-RUN usermod -u ${MLDONKEY_UID} mldonkey
-
 ENV MLDONKEY_GID='568'
-RUN groupmod -g ${MLDONKEY_GID} mldonkey
 
 # Asignamos los permisos adecuados a la carpeta /var/lib/mldonkey
 RUN chown mldonkey:mldonkey /var/lib/mldonkey
@@ -42,6 +39,10 @@ EXPOSE 4001
 EXPOSE 20562
 EXPOSE 20566/udp
 EXPOSE 16965/udp
+
+# Definimos la variable limpiar, que borra todos los ficheros de configuración
+# Todavía no se usa
+ENV MLDONKEY_LIMPIAR="no"
 
 # Definimos el script de entrada
 ADD entrypoint.sh /

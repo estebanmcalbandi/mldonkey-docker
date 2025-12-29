@@ -1,8 +1,24 @@
 #!/bin/sh
 
+# En primer lugar, asigno los UID y GID al usuario mldonkey
+if [ -n "$MLDONKEY_UID" ] && [ -n "$MLDONKEY_GID" ]; then
+    echo "Setting mldonkey UID to $MLDONKEY_UID and GID to $MLDONKEY_GID"
+    groupmod -g "$MLDONKEY_GID" mldonkey
+    usermod -u "$MLDONKEY_UID" -g "$MLDONKEY_GID" mldonkey
+fi
+
+# En segundo lugar, asigno los permisos pertinentes a los volúmenes montados
+chown -R mldonkey:mldonkey /var/lib/mldonkey
+
 # Si no existe el fichero de configuración, es la primera vez que se lanza
 # Creamos una configuración personalizada
 if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
+    # Borramos todo lo que no sea directorio
+    # Esto preserva los directorios como downloads, temp, etc pero elimina
+    # los ficheros de configuración viejos  
+    find /var/lib/mldonkey/ -mindepth 1 ! -type d -exec rm -f {} \;
+
+    # Ejecuto el demonio mldonkey para que cree los ficheros de configuración
     su - mldonkey -c "MLDONKEY_DIR=\"$MLDONKEY_DIR\" mldonkey" &
 
     echo 'Waiting for mldonkey to start...'
