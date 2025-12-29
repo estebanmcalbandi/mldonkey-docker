@@ -1,34 +1,34 @@
 # mldonkey-docker
-Dockerized mlDonkey 3.1.6 on Ubuntu 18.04 in 90MB image (only eDonkey and Kademlia). This repository host the Dockerfile for building mlDonkey Docker image.
+mlDonkey 3.1.6 dockerizado en Ubuntu 18.04 en una imagen de 90MB (solo eDonkey y Kademlia). Este repositorio aloja el Dockerfile para construir la imagen Docker de mlDonkey.
 
-Every day it is more complicated to install mlDonkey due to its lack of maintenance and the difficulty to find everything we need in our operating system. One way to continue enjoying this magnificent p2p program is to run it inside a Docker container and on a platform on which it worked well. This keeps it isolated from the operating system installed on your computer, which will keep it running for years to come.
+Cada día es más complicado instalar mlDonkey debido a su falta de mantenimiento y la dificultad para encontrar todo lo que necesitamos en nuestro sistema operativo. Una forma de seguir disfrutando de este magnífico programa p2p es ejecutarlo dentro de un contenedor Docker y en una plataforma en la que funcionaba bien. Esto lo mantiene aislado del sistema operativo instalado en tu ordenador, lo que lo mantendrá funcionando durante años.
 
-You will need to [install Docker](https://docs.docker.com/engine/install/) first.
-
-
-## Mods
-
-- Disabled all deprecated protocols.
-- Replaced deprecated update URLs with emule-security.org.
-- Increased "client_buffer_size" to 5000000 for bandwidth optimisation.
-- Increased "max_upload_slots" to 10 for easier sharing.
-- Decreased "ED2K-upload_timeout" to 60 to avoid queues full of idle clients.
+Necesitarás [instalar Docker](https://docs.docker.com/engine/install/) primero.
 
 
-## Usage
+## Modificaciones
 
-### To get the image:
+- Deshabilitados todos los protocolos obsoletos.
+- Reemplazadas las URLs de actualización obsoletas con emule-security.org.
+- Aumentado "client_buffer_size" a 5000000 para optimización del ancho de banda.
+- Aumentado "max_upload_slots" a 10 para compartir más fácilmente.
+- Disminuido "ED2K-upload_timeout" a 60 para evitar colas llenas de clientes inactivos.
 
-    docker pull wibol/mldonkey-ubuntu
 
-***or***
+## Uso
+
+### Para obtener la imagen:
+
+    docker pull estebanmcalbandi/mldonkey-ubuntu
+
+***o***
 
     git clone https://github.com/Wibol/mldonkey-docker.git && cd mldonkey-docker
 
     docker build -t wibol/mldonkey-ubuntu .
 
 
-### To create the container:
+### Para crear el contenedor:
 
     docker create --name mldonkey-ubuntu --restart=always \
     -p 4080:4080 -p 4000:4000 -p 4001:4001 \
@@ -36,52 +36,52 @@ You will need to [install Docker](https://docs.docker.com/engine/install/) first
     -v "<$HOME/Downloads/mlDonkey>:/var/lib/mldonkey/incoming/files" \
     wibol/mldonkey-ubuntu
 
-We must remove "<>" and customize its content. mlDonkey stores data inside /var/lib/mldonkey/incoming/files container directory, so we mount it on local filesystem for easy access.
+Debemos eliminar "<>" y personalizar su contenido. mlDonkey almacena los datos dentro del directorio del contenedor /var/lib/mldonkey/incoming/files, por lo que lo montamos en el sistema de archivos local para un acceso fácil.
 
 
-### To run container:
+### Para ejecutar el contenedor:
 
-Open 20562/tcp, 20566/udp and 16965/udp ports in your router and OS.
+Abre los puertos 20562/tcp, 20566/udp y 16965/udp en tu router y sistema operativo.
 
     docker start mldonkey-ubuntu
 
-Then you can access mlDonkey like http://127.0.0.1:4080 or using "mldonkey-gui" installed from your distribution repository or https://pkgs.org/download/mldonkey-gui.
+Luego puedes acceder a mlDonkey como http://127.0.0.1:4080 o usando "mldonkey-gui" instalado desde el repositorio de tu distribución o https://pkgs.org/download/mldonkey-gui.
 
-- User: admin
-- Password: Passw0rd-
+- Usuario: admin
+- Contraseña: Passw0rd-
 
-![image](https://github.com/Wibol/mldonkey-docker/blob/main/d.png)
+![imagen](https://github.com/Wibol/mldonkey-docker/blob/main/d.png)
 
-You can change the default password later from the telnet, web or GUI command lines:
+Puedes cambiar la contraseña por defecto más tarde desde las líneas de comandos de telnet, web o GUI:
 
-    useradd admin <NewPassw0rd->
+    useradd admin <NuevaPassw0rd->
 
-We must remove "<>" and customize its content. Incomming directory is owned by "mldonkey" container user (uid=101, gid=101), so we need to change permissions for full access:
+Debemos eliminar "<>" y personalizar su contenido. El directorio incoming pertenece al usuario del contenedor "mldonkey" (uid=101, gid=101), por lo que necesitamos cambiar los permisos para acceso total:
 
     sudo chmod -R 777 <~/Downloads/mlDonkey>
 
-We must remove "<>" and customize its content. 
+Debemos eliminar "<>" y personalizar su contenido.
 
 
-### Other optional mounts:
+### Otros montajes opcionales:
 
     -v "</var/lib/mldonkey>:/var/lib/mldonkey" \
     -v "</tmp/mldonkey>:/var/lib/mldonkey/temp" \
     -v "<$HOME/Video/mlDonkey>:/var/lib/mldonkey/shared" \
 
-We must remove "<>" and customize its content. If these directories are not mounted on a different place, they will all reside on the system's root partition, which is where Docker stores data by default. Be sure you have enough free space on it.
+Debemos eliminar "<>" y personalizar su contenido. Si estos directorios no se montan en un lugar diferente, residirán en la partición raíz del sistema, que es donde Docker almacena los datos por defecto. Asegúrate de tener suficiente espacio libre en ella.
 
-## Known problems:
+## Problemas conocidos:
 
-When creating the container we received the error:
+Al crear el contenedor recibimos el error:
 > Error response from daemon: create </home/wibol/Downloads/mlDonkey>: "</home/wibol/Downloads/mlDonkey>" includes invalid characters for a local volume name, only "[a-zA-Z0-9][a-zA-Z0-9_.-]" are allowed. If you intended to pass a host directory, use absolute path.
 
-To resolve it we must remove "<>" from the local mount point.
+Para resolverlo debemos eliminar "<>" del punto de montaje local.
 
-## Links:
+## Enlaces:
 
-[mlDonkey in Docker - Webpage](https://mldonkey.wibol.eu/ "mldonkey-ubuntu image web.")
+[mlDonkey en Docker - Página Web](https://mldonkey.wibol.eu/ "mldonkey-ubuntu image web.")
 
-[mlDonkey in Docker - Docker](https://hub.docker.com/r/wibol/mldonkey-ubuntu "mldonkey-ubuntu image repository in Docker.")
+[mlDonkey en Docker - Docker](https://hub.docker.com/r/wibol/mldonkey-ubuntu "mldonkey-ubuntu image repository in Docker.")
 
-[mlDonkey in Docker - Linux Mint](https://forums.linuxmint.com/viewtopic.php?t=396180 "mldonkey-ubuntu installation tutorial in Linux Mint.")
+[mlDonkey en Docker - Linux Mint](https://forums.linuxmint.com/viewtopic.php?t=396180 "mldonkey-ubuntu installation tutorial in Linux Mint.")
