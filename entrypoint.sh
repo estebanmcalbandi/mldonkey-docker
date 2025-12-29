@@ -3,8 +3,8 @@
 # En primer lugar, asigno los UID y GID al usuario mldonkey
 if [ -n "$MLDONKEY_UID" ] && [ -n "$MLDONKEY_GID" ]; then
     echo "Setting mldonkey UID to $MLDONKEY_UID and GID to $MLDONKEY_GID"
-    groupmod -g "$MLDONKEY_GID" mldonkey
-    usermod -u "$MLDONKEY_UID" -g "$MLDONKEY_GID" mldonkey
+    groupdel mldonkey
+    usermod --uid "$MLDONKEY_UID" --gid "$MLDONKEY_GID" mldonkey
 fi
 
 # En segundo lugar, asigno los permisos pertinentes a los volúmenes montados
