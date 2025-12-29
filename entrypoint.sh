@@ -3,26 +3,27 @@
 # En primer lugar, asigno los UID y GID al usuario mldonkey
 if [ -n "$MLDONKEY_UID" ] && [ -n "$MLDONKEY_GID" ]; then
     echo "Setting mldonkey UID to $MLDONKEY_UID and GID to $MLDONKEY_GID"
-    groupdel mldonkey
-    usermod --uid "$MLDONKEY_UID" --gid "$MLDONKEY_GID" mldonkey
+    # asigno el nuevo GID al grupo mldonkey, si falla, elimino el grupo
+    groupmod -g "$MLDONKEY_GID" mldonkey || groupdel mldonkey
+    usermod -u "$MLDONKEY_UID" -g "$MLDONKEY_GID" mldonkey
 fi
 
 # En segundo lugar, asigno los permisos pertinentes a los volúmenes montados
-chown -R mldonkey:mldonkey /var/lib/mldonkey
+chown -R $MLDONKEY_UID:$MLDONKEY_GID /var/lib/mldonkey
 
 # Si no existe el fichero de configuración, es la primera vez que se lanza
 # Creamos una configuración personalizada
 if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
     # Borramos todo lo que no sea directorio
     # Esto preserva los directorios como downloads, temp, etc pero elimina
-    # los ficheros de configuración viejos  
+    # los ficheros de configuración viejos
     find /var/lib/mldonkey/ -mindepth 1 ! -type d -exec rm -f {} \;
 
-    # Ejecuto el demonio mldonkey para que cree los ficheros de configuración
+    # Ejecuto el demonio mldonkey para que cree los ficheros de configuración Y configuro
     su - mldonkey -c "MLDONKEY_DIR=\"$MLDONKEY_DIR\" mldonkey" &
 
     echo 'Waiting for mldonkey to start...'
-    sleep 3
+    sleep 10
 
      # Aunque lo ejecute root, la ejecición la realiza el usuario mldonkey
     mldonkey_command -p "" "set run_as_user mldonkey" "save"
@@ -32,7 +33,6 @@ if [ ! -f /var/lib/mldonkey/downloads.ini ]; then
 
     # Client buffer size a 5MB
     mldonkey_command -p "" "set client_buffer_size 5000000" "save"
-
    
     # IPs desde las que se permite la conexión
     mldonkey_command -p "" "set allowed_ips 0.0.0.0/0" "save"
