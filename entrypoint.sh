@@ -8,6 +8,8 @@ if [ -n "$MLDONKEY_UID" ] && [ -n "$MLDONKEY_GID" ]; then
     usermod -u "$MLDONKEY_UID" -g "$MLDONKEY_GID" mldonkey
 fi
 
+
+
 # En segundo lugar, asigno los permisos pertinentes a los volúmenes montados
 chown -R $MLDONKEY_UID:$MLDONKEY_GID /var/lib/mldonkey
 
