@@ -23,9 +23,9 @@ Necesitarás [instalar Docker](https://docs.docker.com/engine/install/) primero.
 
 ***o***
 
-    git clone https://github.com/Wibol/mldonkey-docker.git && cd mldonkey-docker
+    git clone https://github.com/estebanmcalbandi/mldonkey-docker.git && cd mldonkey-docker
 
-    docker build -t wibol/mldonkey-ubuntu .
+    docker build -t estebanmcalbandi/mldonkey-ubuntu .
 
 
 ### Para crear el contenedor:
@@ -34,7 +34,7 @@ Necesitarás [instalar Docker](https://docs.docker.com/engine/install/) primero.
     -p 4080:4080 -p 4000:4000 -p 4001:4001 \
     -p 20562:20562 -p 20566:20566/udp -p 16965:16965/udp \
     -v "<$HOME/Downloads/mlDonkey>:/var/lib/mldonkey/incoming/files" \
-    wibol/mldonkey-ubuntu
+    estebanmcalbandi/mldonkey-ubuntu
 
 Debemos eliminar "<>" y personalizar su contenido. mlDonkey almacena los datos dentro del directorio del contenedor /var/lib/mldonkey/incoming/files, por lo que lo montamos en el sistema de archivos local para un acceso fácil.
 
@@ -50,7 +50,7 @@ Luego puedes acceder a mlDonkey como http://127.0.0.1:4080 o usando "mldonkey-gu
 - Usuario: admin
 - Contraseña: Passw0rd-
 
-![imagen](https://github.com/Wibol/mldonkey-docker/blob/main/d.png)
+![imagen](https://github.com/estebanmcalbandi/mldonkey-docker/blob/main/d.png)
 
 Puedes cambiar la contraseña por defecto más tarde desde las líneas de comandos de telnet, web o GUI:
 
